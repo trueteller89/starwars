@@ -1,0 +1,62 @@
+<!doctype html>
+<html  ng-app="myApp" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Node/AngularJS Planets App</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+  <link rel="stylesheet" href="https://rawgit.com/daniel-nagy/md-data-table/master/dist/md-data-table.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+  <script src="https://rawgit.com/daniel-nagy/md-data-table/master/dist/md-data-table.js"></script>
+  <script src="app.js"></script>
+</head>
+<body ng-controller="planet">
+  <div>
+    <md-toolbar class="md-table-toolbar md-default">
+      <div class="md-toolbar-tools">
+        <span>Planets of Star Wars</span>
+      </div>
+    </md-toolbar>
+    <md-table-container>
+      <table md-table md-row-select ng-model="plnts">
+        <thead md-head>
+          <tr md-row>
+            <th md-column><span>Name</span></th>
+            <th md-column ><span>Terrain</span></th>
+            <th md-column md-numeric>Population</th>
+            <th md-column md-numeric>Residance</th>
+            <th md-column md-numeric>Films</th>
+          </tr>
+        </thead>
+        <tbody md-body>
+          <tr md-row ng-repeat-start="planet in planets" ng-click="showDetails($index)" style="cursor: pointer;">
+            <td md-cell>{{planet.name}}</td>
+            <td md-cell>{{planet.terrain}}</td>
+            <td md-cell>{{planet.population | thousandSuffix}}</td>
+            <td md-cell>{{planet.residents.length}}</td>
+            <td md-cell>{{planet.films.length}}</td>
+          </tr>
+          <tr md-row ng-show="selected === $index" ng-repeat-end=''>
+            <td colspan="5" md-cell>
+              <div style="margin-left:20px;">
+                Residents: <span ng-repeat="res in planet.residentNames">{{res}}; </span>
+                <span ng-show="planet.residentsNames.length === 0">-</span>
+              </div>
+              <div style="margin-left:20px;">
+                Films: <span ng-repeat="res in planet.filmNames">{{res}}; </span>
+                <span ng-show="planet.filmsNames.length === 0">-</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </md-table-container>
+  </div>
+</body>
+</html>
