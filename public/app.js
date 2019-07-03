@@ -9,7 +9,7 @@ angular.module('myApp', ['ngMaterial', 'md.data.table'])
 	$scope.plnts = []
 	Planets.get()
 	.then(function(data) {
-		$scope.planets = data.data.results
+		$scope.planets = data.data
 		$scope.films = data.data.dataFilms
 		$scope.residents = data.data.dataRes
 		$scope.planets.forEach(function(el) {
