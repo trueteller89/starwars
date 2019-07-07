@@ -1,60 +1,47 @@
 var express = require('express');
 var router = express.Router();
 const fetch = require('node-fetch');
-let basicUrl = 'https://swapi.co/api/planets/?page=' 
-let getAllPlanets = async () => {
-  planets = await getPlanets()
-  return planets
+let basicUrlPlanets = 'https://swapi.co/api/planets/?page='
+let basicUrlFilmID = 'https://swapi.co/api/films/'
+let basicUrlPeopleID = 'https://swapi.co/api/people/'
+let getAllElements = async (basicUrl) => {
+  elements = await getElements(basicUrl)
+  return elements
 }
-let getPlanets = async() => {
+let getElements = async (basicUrl) => {
   let records = [];
   let keepGoing = true;
   let page = 1;
   while (keepGoing) {
-      let response = await reqPlanets(page)
-      await records.push.apply(records, response.results);
-      page += 1
-      if (!response.next) {
-          keepGoing = false;
-          return records;
-      }
+    let response = await reqElements(basicUrl + page)
+    await records.push.apply(records, response.results);
+    page += 1
+    if (!response.next) {
+      keepGoing = false;
+      return records;
+    }
   }
 }
 
-let reqPlanets = async(page) => {
-let result = await fetch(basicUrl+page).then(res => res.json())
-return result
+let reqElements = async (url) => {
+  let result = await fetch(url).then(res => res.json())
+  return result
 }
 
 router.get('/planets', (req, res) => {
-getAllPlanets().then(res => res.send(data))
-  /*Promise.all(urls.map(url => fetch(url)))
-    .then(responses =>
-      Promise.all(responses.map(res => res.json()))
-        .then(dataArr => {
-          let data = { results: dataArr[0].results.concat(dataArr[1].results).concat(dataArr[2].results).concat(dataArr[3].results).concat(dataArr[4].results).concat(dataArr[5].results).concat(dataArr[6].results) }
-          data.dataRes = []
-          data.dataFilms = []
-          let residentsArr = [...new Set(data.results.map(el => el.residents).join().split(',').filter(el => el !== ''))]
-          let filmsArr = [...new Set(data.results.map(el => el.films).join().split(',').filter(el => el !== ''))]
-          Promise.all(residentsArr.map(url => fetch(url)))
-          .then(responses =>
-            Promise.all(responses.map(res => res.json()))
-            .then(function (dataRes) {
-              data.dataRes = dataRes
-              Promise.all(filmsArr.map(url => fetch(url)))
-              .then(responses =>
-                Promise.all(responses.map(res => res.json()))
-                .then(function (dataFilms) {
-                  data.dataFilms = dataFilms
-                  return res.send(data)
-                }))
-            }))
-        }))
-    .catch(err => {
-      res.redirect('/404');
-    })*/
+  getAllElements(basicUrlPlanets).then(data => res.send(data))
 })
-
+router.get('/films/:id', (req, res) => {
+  let id = req.params.id;
+  fetch(basicUrlFilmID + id)
+    .then(data => data.json())
+    .then(data => res.send(data))
+})
+router.get('/people/:id', (req, res) => {
+  let id = req.params.id;
+  fetch(basicUrlPeopleID + id)
+    .then(data => data.json())
+    .then(data => res.send(data))
+})
 
 module.exports = router;

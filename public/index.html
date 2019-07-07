@@ -45,12 +45,12 @@
           <tr md-row ng-show="selected === $index" ng-repeat-end=''>
             <td colspan="5" md-cell>
               <div style="margin-left:20px;">
-                Residents: <span ng-repeat="res in planet.residentNames">{{res}}; </span>
-                <span ng-show="planet.residentNames.length === 0">-</span>
+                Residents: <span ng-show="currentResidentsNames">{{currentResidentsNames}} </span>
+                <span ng-show="!currentResidentsNames">-</span>
               </div>
               <div style="margin-left:20px;">
-                Films: <span ng-repeat="res in planet.filmNames">{{res}}; </span>
-                <span ng-show="planet.filmNames.length === 0">-</span>
+                Films: <span ng-show="currentFilmsNames">{{currentFilmsNames}}; </span>
+                <span ng-show="!currentFilmsNames">-</span>
               </div>
             </td>
           </tr>
