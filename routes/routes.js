@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const fetch = require('node-fetch');
 let basicUrlPlanets = 'https://swapi.co/api/planets/?page='
 let basicUrlFilmID = 'https://swapi.co/api/films/'
@@ -33,13 +33,13 @@ router.get('/planets', (req, res) => {
 })
 router.get('/films/:id', (req, res) => {
   let id = req.params.id;
-  fetch(basicUrlFilmID + id)
+  fetch(basicUrlFilmID + id+'/')
     .then(data => data.json())
     .then(data => res.send(data))
 })
 router.get('/people/:id', (req, res) => {
   let id = req.params.id;
-  fetch(basicUrlPeopleID + id)
+  fetch(basicUrlPeopleID + id+'/')
     .then(data => data.json())
     .then(data => res.send(data))
 })

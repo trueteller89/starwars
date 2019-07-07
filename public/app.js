@@ -4,8 +4,11 @@ angular.module('myApp', ['ngMaterial', 'md.data.table'])
 			getPlanets: function () {
 				return $http.get('http://localhost:3000/planets');
 			},
-			getPeopleOrFilms: function (url) {
-				return $http.get(url);
+			getPeople: function (id) {
+				return $http.get('http://localhost:3000/people/' + id);
+			},
+			getFilms: function (id) {
+				return $http.get('http://localhost:3000/films/' + id);
 			},
 		}
 	}]).controller('planet', ['$scope', '$http', 'StarwarsData', function ($scope, $http, StarwarsData) {
@@ -16,18 +19,44 @@ angular.module('myApp', ['ngMaterial', 'md.data.table'])
 				$scope.planets = result.data
 				$scope.$digest()
 			})
-		function getResidentsOrFilmsArr(arr) {
+		function getPeople(arr) {
 			let promises = []
 			let result = []
+			arr = arr.map(function (el) {
+				el = el.substring(el.lastIndexOf('people/'), el.lastIndexOf('/')).split('/')[1]
+				return el
+			})
 			arr.forEach(function (el) {
-				promises.push(StarwarsData.getPeopleOrFilms(el))
+				promises.push(StarwarsData.getPeople(el))
 			})
 			return Promise.all(promises).then(function (data) {
 				data.forEach(function (el) {
-					let titleName = el.data.name || el.data.title
-					result.push(titleName)
+					result.push(el.data.name)
 				})
 				return result.join(', ')
+			}).then(function (res) {
+				$scope.currentResidentsNames = res
+				$scope.$digest()
+			})
+		}
+		function getFilms(arr) {
+			let promises = []
+			let result = []
+			arr = arr.map(function (el) {
+				el = el.substring(el.lastIndexOf('films/'), el.lastIndexOf('/')).split('/')[1]
+				return el
+			})
+			arr.forEach(function (el) {
+				promises.push(StarwarsData.getFilms(el))
+			})
+			return Promise.all(promises).then(function (data) {
+				data.forEach(function (el) {
+					result.push(el.data.title)
+				})
+				return result.join(', ')
+			}).then(function (res) {
+				$scope.currentFilmsNames = res
+				$scope.$digest()
 			})
 		}
 
@@ -37,28 +66,16 @@ angular.module('myApp', ['ngMaterial', 'md.data.table'])
 			if ($scope.selected) {
 				if ($scope.selected !== $index) {
 					$scope.selected = $index
-					getResidentsOrFilmsArr($scope.planets[$index].residents).then(function (res) {
-						$scope.currentResidentsNames = res
-						$scope.$digest()
-					})
-					getResidentsOrFilmsArr($scope.planets[$index].films).then(function (res) {
-						$scope.currentFilmsNames = res
-						$scope.$digest()
-					})
+					getPeople($scope.planets[$index].residents)
+					getFilms($scope.planets[$index].films)
 				} else {
 					$scope.selected = -1
 				}
 			}
 			else {
 				$scope.selected = $index
-				getResidentsOrFilmsArr($scope.planets[$index].residents).then(function (res) {
-					$scope.currentResidentsNames = res
-					$scope.$digest()
-				})
-				getResidentsOrFilmsArr($scope.planets[$index].films).then(function (res) {
-					$scope.currentFilmsNames = res
-					$scope.$digest()
-				})
+				getPeople($scope.planets[$index].residents)
+				getFilms($scope.planets[$index].films)
 			}
 		}
 	}]).filter('thousandSuffix', function () {
